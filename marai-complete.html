@@ -1,0 +1,2193 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarAI | AI-Powered Marketing Operating System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'marai-orange': '#ff6b35',
+                        'marai-orange-hover': '#e55a2b',
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            /* Backgrounds */
+            --bg-primary: #0f1419;
+            --bg-secondary: #0d1117;
+            --bg-card: #161b22;
+            --bg-hover: #21262d;
+
+            /* Borders */
+            --border-color: #21262d;
+            --border-hover: #30363d;
+
+            /* Text */
+            --text-primary: #f0f6fc;
+            --text-secondary: #c9d1d9;
+            --text-muted: #7d8590;
+            --text-subtle: #8b949e;
+
+            /* Brand / Accent */
+            --accent-color: #ff6b35;
+            --accent-hover: #e55a2b;
+
+            /* Status */
+            --success-color: #56d364;
+            --error-color: #f85149;
+            --warning-color: #f1c40f;
+
+            /* Legacy compatibility */
+            --bg: #0f1419;
+            --primary: #ff6b35;
+            --accent: #ff6b35;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .mesh-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 15% 20%, rgba(255, 107, 53, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 85% 80%, rgba(255, 107, 53, 0.08) 0%, transparent 40%);
+            filter: blur(100px);
+        }
+
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, #fff 0%, var(--accent-color) 50%, #fff 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shimmer 5s linear infinite;
+        }
+
+        @keyframes shimmer { to { background-position: 200% center; } }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .bento-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .bento-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
+        }
+
+        .accent-glow-btn {
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .accent-glow-btn:hover {
+            box-shadow: 0 0 40px rgba(255, 107, 53, 0.7);
+            transform: translateY(-2px);
+        }
+
+        /* Legacy support */
+        .purple-glow-btn {
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .purple-glow-btn:hover {
+            box-shadow: 0 0 40px rgba(255, 107, 53, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .nav-blur {
+            backdrop-filter: blur(20px);
+            background: rgba(15, 20, 25, 0.8);
+        }
+
+        .accent-glow {
+            box-shadow: 0 0 60px rgba(255, 107, 53, 0.2);
+        }
+
+        /* Legacy support */
+        .purple-glow {
+            box-shadow: 0 0 60px rgba(255, 107, 53, 0.2);
+        }
+
+        .tool-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            background: rgba(255, 107, 53, 0.1);
+            border-color: var(--accent-color);
+            transform: translateY(-4px);
+        }
+
+        .score-badge {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* MarAI Logo Styles */
+        .marai-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .marai-logo-icon {
+            color: var(--accent-color);
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .marai-logo-icon svg {
+            width: 40px;
+            height: 40px;
+        }
+
+        .marai-logo-text {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+            color: var(--text-primary);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px 24px 0 24px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+        }
+
+        .modal-body {
+            padding: 0 24px 24px 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            background: var(--bg-hover);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        /* Image Section Styles */
+        .hero-dashboard-image,
+        .workflow-image-stack img,
+        .optimizer-score-grid img,
+        .citation-image-grid img,
+        .google-data-visual img,
+        .asset-library-visual img {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .hero-dashboard-image:hover,
+        .workflow-image-stack img:hover,
+        .optimizer-score-grid img:hover,
+        .citation-image-grid img:hover,
+        .google-data-visual img:hover,
+        .asset-library-visual img:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .workflow-image-stack {
+            position: relative;
+        }
+
+        .optimizer-score-grid {
+            display: grid;
+        }
+
+        /* Image Lightbox Modal */
+        .image-lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            padding: 20px;
+        }
+
+        .image-lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-content {
+            max-width: 95vw;
+            max-height: 95vh;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .image-lightbox.active .lightbox-content {
+            transform: scale(1);
+        }
+
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 95vh;
+            width: auto;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 25px 100px rgba(0, 0, 0, 0.8);
+            image-rendering: high-quality;
+            image-rendering: -webkit-optimize-contrast;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .lightbox-close:hover {
+            background: rgba(255, 107, 53, 0.9);
+            border-color: #ff6b35;
+            transform: rotate(90deg);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .lightbox-nav:hover {
+            background: rgba(255, 107, 53, 0.9);
+            border-color: #ff6b35;
+        }
+
+        .lightbox-prev {
+            left: -70px;
+        }
+
+        .lightbox-next {
+            right: -70px;
+        }
+
+        @media (max-width: 768px) {
+            .lightbox-prev {
+                left: 10px;
+            }
+            .lightbox-next {
+                right: 10px;
+            }
+            .lightbox-close {
+                top: 10px;
+                right: 10px;
+            }
+        }
+
+/* Workflow Slider Styles - Height Adjusted */
+        .workflow-viewport {
+            width: 100%;
+            height: 250px; /* <--- CHANGE THIS to set your desired height */
+            overflow: hidden;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        #workflowSlider {
+            display: flex;
+            height: 100%; /* Ensures images fill the new height */
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .workflow-slide {
+            min-width: 100%;
+            height: 100%; 
+            flex-shrink: 0;
+        }
+
+        .workflow-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* This crops the top/bottom to fit the height */
+            object-position: top; /* Keeps the top part of the image visible */
+            cursor: pointer;
+        }
+
+        .slider-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 99px;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .slider-dot.active {
+            background-color: #ff6b35;
+            width: 24px;
+        }
+
+/* Fixed-Size Citation Slider */
+        .citation-viewport {
+            width: 100%;
+            height: 200px; /* This locks the height */
+            overflow: hidden;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        #citationSlider {
+            display: flex;
+            width: 100%; 
+            height: 100%;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .citation-slide {
+            /* This forces every slide to be exactly the width of the viewport */
+            flex: 0 0 100%; 
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .citation-slide img {
+            width: 100%;
+            height: 100%;
+            /* This fills the width and height perfectly without stretching */
+            object-fit: cover; 
+            object-position: top center;
+            display: block;
+            cursor: pointer;
+        }
+
+        .citation-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 99px;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .citation-dot.active {
+            background-color: #ff6b35;
+            width: 24px;
+        }
+
+/* Overlay Styles */
+        .image-container {
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .image-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.4); /* Thin black layer */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 1rem; /* Matches your image rounding */
+        }
+
+        .image-container:hover .image-overlay {
+            opacity: 1;
+        }
+
+        .overlay-text {
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            background: rgba(0,0,0,0.6);
+            padding: 0.5rem 1rem;
+            border-radius: 99px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+/* Ensures the overlay inside the slider matches the viewport height */
+.workflow-slide .image-container, 
+.workflow-slide .image-overlay {
+    height: 100%;
+    width: 100%;
+}
+
+/* Ensures the overlay inside both sliders matches the fixed viewport heights */
+.workflow-slide .image-container, 
+.workflow-slide .image-overlay,
+.citation-slide .image-container,
+.citation-slide .image-overlay {
+    height: 100%;
+    width: 100%;
+}
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Request Demo Modal -->
+    <div class="modal-overlay" id="demoModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">
+                <i data-lucide="x"></i>
+            </button>
+            <div class="modal-header">
+                <h2 class="text-2xl font-bold mb-2">Request a Demo</h2>
+                <p class="text-slate-400 text-sm pb-4">Let's discuss how MarAI can transform your marketing operations.</p>
+            </div>
+            <div class="modal-body">
+                <form id="demoForm" onsubmit="handleFormSubmit(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="name">Name *</label>
+                        <input type="text" id="name" name="name" class="form-input" placeholder="Your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email *</label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="you@company.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" class="form-input" placeholder="+1 (555) 000-0000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="message">Message</label>
+                        <textarea id="message" name="message" class="form-textarea" placeholder="Tell us about your marketing needs..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full px-6 py-3 bg-marai-orange hover:bg-marai-orange-hover rounded-xl font-bold text-white transition accent-glow-btn">
+                        Submit Request
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Lightbox Modal -->
+    <div class="image-lightbox" id="imageLightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close" onclick="closeLightbox()">×</button>
+            <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)" style="display: none;">
+                <i data-lucide="chevron-left"></i>
+            </button>
+            <img src="" alt="" class="lightbox-image" id="lightboxImage">
+            <button class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)" style="display: none;">
+                <i data-lucide="chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="mesh-bg"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-[100] px-6 py-5">
+        <div class="max-w-7xl mx-auto flex justify-between items-center glass rounded-2xl px-6 py-3 nav-blur">
+            <div class="marai-logo">
+                <span class="marai-logo-icon">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="48"
+                        height="48"
+                        viewBox="0 0 48 48"
+                        fill="none"
+                        stroke="#ff6b35"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <!-- Top-left (small) -->
+                        <rect x="4" y="4" width="14" height="14" rx="4" />
+                        <!-- Top-right (large) -->
+                        <rect x="24" y="4" width="20" height="20" rx="5" />
+                        <!-- Bottom-left (large) -->
+                        <rect x="4" y="24" width="20" height="20" rx="5" />
+                        <!-- Bottom-right (small) -->
+                        <rect x="30" y="30" width="14" height="14" rx="4" />
+                    </svg>
+                </span>
+                <span class="marai-logo-text">MarAI</span>
+            </div>
+            <div class="hidden md:flex gap-8 text-sm font-medium text-slate-400">
+                <a href="#platform" class="hover:text-white transition">Platform</a>
+                <a href="#workflow" class="hover:text-white transition">Workflow</a>                
+                <a href="#tools" class="hover:text-white transition">Tools</a>
+                <a href="#security" class="hover:text-white transition">Security</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="/login" class="bg-marai-orange hover:bg-marai-orange-hover px-5 py-2 rounded-xl text-sm font-bold text-white transition accent-glow-btn flex items-center justify-center">
+                    Login
+                </a>
+                
+                <button onclick="openModal()" class="bg-marai-orange hover:bg-marai-orange-hover px-5 py-2 rounded-xl text-sm font-bold text-white transition accent-glow-btn">
+                    Request Demo
+                </button>
+            </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-48 pb-32 px-6">
+        <div class="max-w-5xl mx-auto text-center reveal">
+            <div class="inline-block px-4 py-1.5 glass rounded-full border border-marai-orange/30 text-marai-orange text-xs font-bold tracking-widest uppercase mb-8">
+                A Unified MarTech Solution for Modern Teams
+            </div>
+            <h1 class="text-5xl md:text-7xl font-black leading-[1.05] tracking-tight mb-8">
+                One Platform to <span class="shimmer">Plan, Create, Optimize, and Track</span> Marketing — Powered by AI
+            </h1>
+            <p class="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed mb-12">
+                MarAI is a comprehensive AI-powered marketing automation platform built for real-world client workflows. It combines content generation, SEO & GEO optimization, AI citation tracking, and asset management into a single, scalable system.
+            </p>
+            <div class="flex justify-center mb-24">
+                <button onclick="openModal()" class="px-10 py-5 bg-marai-orange hover:bg-marai-orange-hover rounded-2xl font-bold text-lg text-white transition accent-glow-btn">Request Demo</button>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-[11px] font-bold text-slate-500 uppercase tracking-widest">
+                <div class="flex flex-col items-center gap-2"><i data-lucide="users" class="text-marai-orange"></i> Agency Built</div>
+                <div class="flex flex-col items-center gap-2"><i data-lucide="cpu" class="text-marai-orange"></i> Dual-AI Tech</div>
+                <div class="flex flex-col items-center gap-2"><i data-lucide="layers" class="text-marai-orange"></i> Multi-Client</div>
+                <div class="flex flex-col items-center gap-2"><i data-lucide="search" class="text-marai-orange"></i> GEO Optimized</div>
+                <div class="flex flex-col items-center gap-2"><i data-lucide="download" class="text-marai-orange"></i> Export Ready</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HERO PRODUCT SCREENSHOT -->
+    <!-- 
+    Design intent:
+    Primary credibility moment.
+    This is the full MarAI dashboard showing sidebar, header, and core metrics.
+    Image should feel premium, slightly elevated, and immediately communicate:
+    'This is a real, production-grade platform.'
+    -->
+    <section class="hero-product-visual py-16 px-6">
+        <div class="max-w-7xl mx-auto reveal">
+            <img
+                src="C:\Users\91733\Desktop\Img\Hero Section\Dashboard.png"
+                alt="MarAI Dashboard overview showing multi-client marketing metrics, tools, and workflows"
+                class="hero-dashboard-image w-full rounded-3xl shadow-2xl border border-white/10"
+                onclick="openLightbox(this.src, this.alt)"
+            />
+        </div>
+    </section>
+
+    <!-- What MarAI Is -->
+    <section id="platform" class="py-32 px-6 bg-white/[0.01]">
+        <div class="max-w-7xl mx-auto">
+            <div class="max-w-4xl mx-auto text-center mb-20 reveal">
+                <div class="inline-block px-4 py-1.5 glass rounded-full text-marai-orange text-xs font-bold tracking-widest uppercase mb-6">
+                    Not Just Another AI Tool
+                </div>
+                <h2 class="text-4xl md:text-5xl font-black mb-6">What MarAI Is</h2>
+                <p class="text-xl text-slate-400 leading-relaxed mb-8">
+                    MarAI is not a single-purpose AI tool. It is a full-stack marketing platform designed to support the entire lifecycle of marketing execution — from strategy and research to content creation, optimization, reporting, and reuse.
+                </p>
+                <p class="text-lg text-slate-400 leading-relaxed">
+                    Unlike generic AI writers, MarAI is <strong class="text-white">context-aware</strong>, <strong class="text-white">client-scoped</strong>, and <strong class="text-white">workflow-driven</strong>. Every output is generated using structured client data, brand guidelines, industry context, and historical session memory.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
+                <div class="glass p-8 rounded-3xl bento-card">
+                    <i data-lucide="briefcase" class="text-marai-orange mb-4"></i>
+                    <h3 class="font-bold mb-3">Real Client Work</h3>
+                    <p class="text-sm text-slate-400">Designed for real client work, not demos or experiments</p>
+                </div>
+                <div class="glass p-8 rounded-3xl bento-card">
+                    <i data-lucide="database" class="text-marai-orange mb-4"></i>
+                    <h3 class="font-bold mb-3">Context Retention</h3>
+                    <p class="text-sm text-slate-400">Maintains context across tools and sessions</p>
+                </div>
+                <div class="glass p-8 rounded-3xl bento-card">
+                    <i data-lucide="radar" class="text-marai-orange mb-4"></i>
+                    <h3 class="font-bold mb-3">AI Visibility Tracking</h3>
+                    <p class="text-sm text-slate-400">Tracks brand visibility inside AI answers, not just Google rankings</p>
+                </div>
+                <div class="glass p-8 rounded-3xl bento-card">
+                    <i data-lucide="file-text" class="text-marai-orange mb-4"></i>
+                    <h3 class="font-bold mb-3">Export-Ready</h3>
+                    <p class="text-sm text-slate-400">Produces export-ready deliverables, not raw AI text</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflow & Session Memory -->
+    <section id="workflow" class="py-32 px-6">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
+            <div class="reveal">
+                <div class="flex items-center gap-3 mb-6">
+                    <i data-lucide="workflow" class="text-marai-orange"></i>
+                    <span class="font-bold uppercase tracking-widest text-xs">Workflow Engine</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">Built for Long-Running Marketing Workflows</h2>
+                <p class="text-xl text-slate-400 leading-relaxed mb-8">
+                    MarAI is <strong class="text-white">session-based</strong>, not prompt-based. Instead of treating each interaction as disposable, MarAI is designed for multi-hour and multi-day marketing work, where strategy evolves over time and context must persist.
+                </p>
+
+                <!-- WORKFLOW CONTINUITY VISUAL -->
+                <!-- 
+                Design intent:
+                Visually communicates session persistence across tools.
+                Images should feel related, continuous, and part of the same workflow.
+                No device mockups. No separation by frames.
+                -->
+                <div class="workflow-continuity-visual mb-8 relative group">
+    <button onclick="moveWorkflowSlider(-1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-black/60 hover:bg-marai-orange p-1.5 rounded-full text-white transition-all opacity-0 group-hover:opacity-100">
+        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+    </button>
+    <button onclick="moveWorkflowSlider(1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-black/60 hover:bg-marai-orange p-1.5 rounded-full text-white transition-all opacity-0 group-hover:opacity-100">
+        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+    </button>
+
+    <div class="workflow-viewport">
+        <div id="workflowSlider">
+            <div class="workflow-slide">
+                <div class="image-container" onclick="openLightbox('C:/Users/91733/Desktop/Img/Workflow & Session Memory/SEO Strategy.png', 'SEO Strategy')">
+                    <img src="C:\Users\91733\Desktop\Img\Workflow & Session Memory\SEO Strategy.png" alt="SEO Strategy" />
+                    <div class="image-overlay">
+                        <span class="overlay-text">Click for preview</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workflow-slide">
+                <div class="image-container" onclick="openLightbox('C:/Users/91733/Desktop/Img/Workflow & Session Memory/Content Creator.png', 'Content Creator')">
+                    <img src="C:\Users\91733\Desktop\Img\Workflow & Session Memory\Content Creator.png" alt="Content Creator" />
+                    <div class="image-overlay">
+                        <span class="overlay-text">Click for preview</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workflow-slide">
+                <div class="image-container" onclick="openLightbox('C:/Users/91733/Desktop/Img/Workflow & Session Memory/Content Optimizer.png', 'Content Optimizer')">
+                    <img src="C:\Users\91733\Desktop\Img\Workflow & Session Memory\Content Optimizer.png" alt="Content Optimizer" />
+                    <div class="image-overlay">
+                        <span class="overlay-text">Click for preview</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="flex justify-center gap-2 mt-4">
+        <div class="slider-dot active" onclick="jumpToSlide(0)"></div>
+        <div class="slider-dot" onclick="jumpToSlide(1)"></div>
+        <div class="slider-dot" onclick="jumpToSlide(2)"></div>
+    </div>
+</div>
+
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="check-circle" class="text-emerald-500 mt-1"></i>
+                        <div>
+                            <h4 class="font-semibold mb-1">Session persistence across 9+ tools</h4>
+                            <p class="text-sm text-slate-500">Never lose your work when switching between tools</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="check-circle" class="text-emerald-500 mt-1"></i>
+                        <div>
+                            <h4 class="font-semibold mb-1">Tool-level state retention</h4>
+                            <p class="text-sm text-slate-500">Each tool maintains its own memory and context</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="check-circle" class="text-emerald-500 mt-1"></i>
+                        <div>
+                            <h4 class="font-semibold mb-1">Intelligent token tracking</h4>
+                            <p class="text-sm text-slate-500">Optimized context windows with smart thresholds</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="glass p-10 rounded-[3rem] reveal border-marai-orange/30">
+                <h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                    <i data-lucide="git-branch" class="text-marai-orange"></i> 
+                    Seamless Tool Switching
+                </h3>
+                <p class="text-slate-400 mb-8 text-sm">Switch between SEO Strategy → Content Creator → Optimizer without resetting context. Build campaigns iteratively instead of starting from scratch.</p>
+                <div class="space-y-3">
+                    <div class="bg-white/5 p-4 rounded-xl border-l-4 border-marai-orange">
+                        <div class="text-xs text-marai-orange font-bold mb-1">STEP 1</div>
+                        <div class="text-sm font-semibold">SEO Strategy Tool</div>
+                    </div>
+                    <div class="flex justify-center">
+                        <i data-lucide="arrow-down" class="text-slate-600"></i>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl border-l-4 border-blue-500">
+                        <div class="text-xs text-blue-400 font-bold mb-1">STEP 2</div>
+                        <div class="text-sm font-semibold">Content Creator</div>
+                    </div>
+                    <div class="flex justify-center">
+                        <i data-lucide="arrow-down" class="text-slate-600"></i>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl border-l-4 border-emerald-500">
+                        <div class="text-xs text-emerald-400 font-bold mb-1">STEP 3</div>
+                        <div class="text-sm font-semibold">Content Optimizer</div>
+                    </div>
+                </div>
+                <div class="mt-6 text-xs text-slate-500 italic">
+                    All context preserved. No repetition required.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Unified Tool Suite -->
+    <section id="tools" class="py-32 px-6 bg-white/[0.01]">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-20 reveal">
+                <div class="inline-block px-4 py-1.5 glass rounded-full text-marai-orange text-xs font-bold tracking-widest uppercase mb-6">
+                    Complete Marketing Suite
+                </div>
+                <h2 class="text-4xl md:text-5xl font-black mb-6">10 Core Modules, One Platform</h2>
+                <p class="text-xl text-slate-400 max-w-3xl mx-auto">
+                    MarAI brings together planning, execution, optimization, and intelligence into one cohesive platform.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 reveal">
+                <!-- Interactive Dashboard -->
+                <div class="glass p-8 rounded-3xl tool-card border-marai-orange/30">
+                    <div class="w-12 h-12 bg-marai-orange/20 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="layout-dashboard" class="text-marai-orange"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Interactive Dashboard</h3>
+                    <p class="text-sm text-slate-400 mb-4">Centralized command center surfacing client activity, content volume, tool usage, and performance signals.</p>
+                    <div class="text-xs text-marai-orange font-semibold">Real-time visibility →</div>
+                </div>
+
+                <!-- Marketing Calendar -->
+                <div class="glass p-8 rounded-3xl tool-card border-blue-500/30">
+                    <div class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="calendar" class="text-blue-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Marketing Calendar</h3>
+                    <p class="text-sm text-slate-400 mb-4">Plan campaigns across channels with unified scheduling that connects strategy directly to execution.</p>
+                    <div class="text-xs text-blue-400 font-semibold">Cross-channel planning →</div>
+                </div>
+
+                <!-- Social Media Calendar -->
+                <div class="glass p-8 rounded-3xl tool-card border-emerald-500/30">
+                    <div class="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="share-2" class="text-emerald-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Social Media Calendar</h3>
+                    <p class="text-sm text-slate-400 mb-4">Platform-specific scheduling logic with AI-generated content tailored to each channel.</p>
+                    <div class="text-xs text-emerald-400 font-semibold">Smart scheduling →</div>
+                </div>
+
+                <!-- Email Campaign Calendar -->
+                <div class="glass p-8 rounded-3xl tool-card border-orange-500/30">
+                    <div class="w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="mail" class="text-orange-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Email Campaign Calendar</h3>
+                    <p class="text-sm text-slate-400 mb-4">Campaign-level planning with AI-managed content, frequency, and sequencing.</p>
+                    <div class="text-xs text-orange-400 font-semibold">Automated cadence →</div>
+                </div>
+
+                <!-- SEO Strategy Tool -->
+                <div class="glass p-8 rounded-3xl tool-card border-marai-orange/30">
+                    <div class="w-12 h-12 bg-marai-orange/20 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="search" class="text-marai-orange"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">SEO Strategy Tool</h3>
+                    <p class="text-sm text-slate-400 mb-4">Comprehensive keyword research, content gap analysis, and strategic planning.</p>
+                    <div class="text-xs text-marai-orange font-semibold">Data-driven strategy →</div>
+                </div>
+
+                <!-- Content Creator -->
+                <div class="glass p-8 rounded-3xl tool-card border-blue-500/30">
+                    <div class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="pen-tool" class="text-blue-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Content Creator</h3>
+                    <p class="text-sm text-slate-400 mb-4">AI-powered content generation with brand voice consistency and context awareness.</p>
+                    <div class="text-xs text-blue-400 font-semibold">Brand-aligned creation →</div>
+                </div>
+
+                <!-- Content Optimizer -->
+                <div class="glass p-8 rounded-3xl tool-card border-emerald-500/30">
+                    <div class="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="trending-up" class="text-emerald-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Content Optimizer</h3>
+                    <p class="text-sm text-slate-400 mb-4">Triple-score analysis: SEO, GEO (AI discoverability), and brand alignment with AI rewrites.</p>
+                    <div class="text-xs text-emerald-400 font-semibold">Multi-dimensional optimization →</div>
+                </div>
+
+                <!-- AI Citation Tracker -->
+                <div class="glass p-8 rounded-3xl tool-card border-pink-500/30">
+                    <div class="w-12 h-12 bg-pink-500/20 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="radar" class="text-pink-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">AI Citation Tracker</h3>
+                    <p class="text-sm text-slate-400 mb-4">Track brand visibility inside AI-generated answers with Perplexity-powered intelligence.</p>
+                    <div class="text-xs text-pink-400 font-semibold">AI visibility monitoring →</div>
+                </div>
+
+                <!-- Persona Builder -->
+                <div class="glass p-8 rounded-3xl tool-card border-yellow-500/30">
+                    <div class="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="user-circle" class="text-yellow-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Persona Builder</h3>
+                    <p class="text-sm text-slate-400 mb-4">Create detailed audience personas that inform all content and strategy decisions.</p>
+                    <div class="text-xs text-yellow-400 font-semibold">Audience intelligence →</div>
+                </div>
+
+                <!-- Content Gap Analyzer -->
+                <div class="glass p-8 rounded-3xl tool-card border-indigo-500/30">
+                    <div class="w-12 h-12 bg-indigo-500/20 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="file-search" class="text-indigo-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Content Gap Analyzer</h3>
+                    <p class="text-sm text-slate-400 mb-4">Identify what your competitors are ranking for that you aren't, and get AI-generated plans to close the gap.</p>
+                    <div class="text-xs text-indigo-400 font-semibold">Competitive intelligence →</div>
+                </div>
+
+                <!-- Keyword Research -->
+                    <div class="glass p-8 rounded-3xl tool-card border-teal-500/30">
+                    <div class="w-12 h-12 bg-teal-500/20 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="key" class="text-teal-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Keyword Research</h3>
+                    <p class="text-sm text-slate-400 mb-4">Deep-dive keyword analysis with intent mapping and difficulty scores designed for the AI-era of search.</p>
+                    <div class="text-xs text-teal-400 font-semibold">Intent-based discovery →</div>
+                </div>
+
+                <!-- Asset Library -->
+                <div class="glass p-8 rounded-3xl tool-card border-cyan-500/30">
+                    <div class="w-12 h-12 bg-cyan-500/20 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="library" class="text-cyan-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Asset Library</h3>
+                    <p class="text-sm text-slate-400 mb-4">Centralized knowledge base where every output becomes a reusable, evolvable asset.</p>
+                    <div class="text-xs text-cyan-400 font-semibold">Compounding knowledge →</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Client-Scoped Multi-Tenant -->
+    <section class="py-32 px-6">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
+            <div class="glass p-10 rounded-[3rem] reveal border-marai-orange/20 purple-glow">
+                <div class="flex items-center gap-3 mb-6">
+                    <i data-lucide="shield-check" class="text-marai-orange w-6 h-6"></i>
+                    <span class="text-marai-orange font-bold text-sm uppercase tracking-widest">Multi-Client Architecture</span>
+                </div>
+                <h3 class="text-3xl font-bold mb-6">Client-Isolated by Design</h3>
+                <div class="space-y-4 mb-6">
+                    <div class="bg-white/5 p-4 rounded-xl border-l-4 border-marai-orange">
+                        <div class="text-xs text-marai-orange font-bold mb-2">CLIENT A</div>
+                        <div class="text-sm text-slate-400">Brand voice, goals, and data remain isolated</div>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl border-l-4 border-blue-500">
+                        <div class="text-xs text-blue-400 font-bold mb-2">CLIENT B</div>
+                        <div class="text-sm text-slate-400">Switching rehydrates correct context automatically</div>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl border-l-4 border-emerald-500">
+                        <div class="text-xs text-emerald-400 font-bold mb-2">CLIENT C</div>
+                        <div class="text-sm text-slate-400">Zero cross-client contamination</div>
+                    </div>
+                </div>
+                <p class="text-xs text-slate-500 italic">Every asset is tied to a specific client ID. No exceptions.</p>
+            </div>
+
+            <div class="reveal">
+                <div class="flex items-center gap-3 mb-6">
+                    <i data-lucide="building-2" class="text-marai-orange"></i>
+                    <span class="font-bold uppercase tracking-widest text-xs">Enterprise Ready</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">Built for Agencies & Multi-Client Teams</h2>
+                <p class="text-xl text-slate-400 leading-relaxed mb-8">
+                    MarAI is architected from the ground up for multi-client environments, not solo creators.
+                </p>
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="font-bold mb-2 flex items-center gap-2">
+                            <i data-lucide="check" class="text-emerald-500 w-5 h-5"></i>
+                            Scale Without Risk
+                        </h4>
+                        <p class="text-sm text-slate-400 pl-7">Agencies can manage hundreds of clients with complete confidence</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-2 flex items-center gap-2">
+                            <i data-lucide="check" class="text-emerald-500 w-5 h-5"></i>
+                            Zero Context Errors
+                        </h4>
+                        <p class="text-sm text-slate-400 pl-7">Eliminate costly mistakes from context bleeding between accounts</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-2 flex items-center gap-2">
+                            <i data-lucide="check" class="text-emerald-500 w-5 h-5"></i>
+                            Enterprise Isolation
+                        </h4>
+                        <p class="text-sm text-slate-400 pl-7">Major credibility signal for enterprise and agency buyers</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEO + GEO Content Optimizer -->
+    <section class="py-32 px-6 bg-white/[0.01]">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-20 reveal">
+                <div class="inline-block px-4 py-1.5 glass rounded-full text-marai-orange text-xs font-bold tracking-widest uppercase mb-6">
+                    Beyond Traditional SEO
+                </div>
+                <h2 class="text-4xl md:text-5xl font-black mb-6">SEO + AI Discoverability (GEO)</h2>
+                <p class="text-xl text-slate-400 max-w-3xl mx-auto mb-8">
+                    The Content Optimizer evaluates content using three parallel scoring systems, designed for both search engines and generative AI systems.
+                </p>
+
+                <!-- SEO + GEO OPTIMIZER VISUAL -->
+                <!-- 
+                Design intent:
+                This section proves MarAI is not 'just SEO'.
+                These three visuals must clearly communicate:
+                SEO + AI discoverability + brand alignment working together.
+                -->
+                <div class="optimizer-visual max-w-6xl mx-auto mb-12">
+    <div class="optimizer-score-grid grid md:grid-cols-3 gap-6">
+        
+        <div class="image-container" onclick="openLightbox('C:/Users/91733/Desktop/Img/SEO + GEO Content Optimizer/SEO.png', 'SEO score analysis')">
+            <img src="C:\Users\91733\Desktop\Img\SEO + GEO Content Optimizer\SEO.png" alt="SEO score analysis" class="w-full rounded-2xl border border-white/10 shadow-xl" />
+            <div class="image-overlay">
+                <span class="overlay-text">Click for preview</span>
+            </div>
+        </div>
+
+        <div class="image-container" onclick="openLightbox('C:/Users/91733/Desktop/Img/SEO + GEO Content Optimizer/GEO.png', 'GEO score analysis')">
+            <img src="C:\Users\91733\Desktop\Img\SEO + GEO Content Optimizer\GEO.png" alt="GEO score analysis" class="w-full rounded-2xl border border-white/10 shadow-xl" />
+            <div class="image-overlay">
+                <span class="overlay-text">Click for preview</span>
+            </div>
+        </div>
+
+        <div class="image-container" onclick="openLightbox('C:/Users/91733/Desktop/Img/SEO + GEO Content Optimizer/Brand.png', 'Brand alignment score')">
+            <img src="C:\Users\91733\Desktop\Img\SEO + GEO Content Optimizer\Brand.png" alt="Brand alignment score" class="w-full rounded-2xl border border-white/10 shadow-xl" />
+            <div class="image-overlay">
+                <span class="overlay-text">Click for preview</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+            <div class="grid md:grid-cols-3 gap-8 mb-16 reveal">
+                <div class="glass p-8 rounded-3xl border-t-4 border-t-blue-500">
+                    <div class="text-blue-400 font-bold mb-4 flex justify-between items-center">
+                        SEO Score 
+                        <span class="bg-blue-500/20 px-3 py-1.5 rounded-lg text-sm score-badge">86%</span>
+                    </div>
+                    <ul class="text-sm text-slate-400 space-y-3">
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0"></i>
+                            <span>Word count optimization</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0"></i>
+                            <span>Heading structure analysis</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0"></i>
+                            <span>Image usage & alt text</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0"></i>
+                            <span>Internal & external linking</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0"></i>
+                            <span>Keyword density tracking</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="glass p-8 rounded-3xl border-t-4 border-t-accent-color purple-glow">
+                    <div class="text-marai-orange font-bold mb-4 flex justify-between items-center">
+                        GEO Score 
+                        <span class="bg-marai-orange/20 px-3 py-1.5 rounded-lg text-sm score-badge">94%</span>
+                    </div>
+                    <ul class="text-sm text-slate-400 space-y-3">
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-marai-orange mt-0.5 flex-shrink-0"></i>
+                            <span>AI citeability index</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-marai-orange mt-0.5 flex-shrink-0"></i>
+                            <span>Information gain analysis</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-marai-orange mt-0.5 flex-shrink-0"></i>
+                            <span>Factual density measurement</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-marai-orange mt-0.5 flex-shrink-0"></i>
+                            <span>Answer completeness check</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-marai-orange mt-0.5 flex-shrink-0"></i>
+                            <span>Citation-worthy signals</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="glass p-8 rounded-3xl border-t-4 border-t-emerald-500">
+                    <div class="text-emerald-400 font-bold mb-4 flex justify-between items-center">
+                        Brand Score 
+                        <span class="bg-emerald-500/20 px-3 py-1.5 rounded-lg text-sm score-badge">91%</span>
+                    </div>
+                    <ul class="text-sm text-slate-400 space-y-3">
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0"></i>
+                            <span>Tone & voice alignment</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0"></i>
+                            <span>USP coverage density</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0"></i>
+                            <span>Vocabulary consistency</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0"></i>
+                            <span>Audience relevance match</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0"></i>
+                            <span>Message alignment</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="max-w-4xl mx-auto glass p-10 rounded-[3rem] reveal border-marai-orange/30">
+                <h3 class="text-2xl font-bold mb-4 flex items-center gap-3">
+                    <i data-lucide="sparkles" class="text-marai-orange"></i>
+                    AI-Powered Rewrite Suggestions
+                </h3>
+                <p class="text-slate-400 mb-6">Each section is analyzed independently, with intelligent rewrite suggestions for:</p>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-white/5 p-4 rounded-xl">
+                        <h4 class="font-semibold mb-2 text-sm">Adding Keywords</h4>
+                        <p class="text-xs text-slate-500">Natural integration without keyword stuffing</p>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl">
+                        <h4 class="font-semibold mb-2 text-sm">Improving Clarity</h4>
+                        <p class="text-xs text-slate-500">Enhanced readability and comprehension</p>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl">
+                        <h4 class="font-semibold mb-2 text-sm">Increasing Authority</h4>
+                        <p class="text-xs text-slate-500">Expert voice and credible positioning</p>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl">
+                        <h4 class="font-semibold mb-2 text-sm">Simplifying Language</h4>
+                        <p class="text-xs text-slate-500">Accessible without sacrificing depth</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Citation Intelligence -->
+    <section class="py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="max-w-6xl mx-auto glass p-12 rounded-[3rem] reveal border-marai-orange/30 accent-glow">
+                <div class="grid lg:grid-cols-2 gap-10 items-center">
+                    <div>
+                        <div class="flex items-center gap-2 text-marai-orange font-bold mb-4">
+                            <i data-lucide="radar" class="w-6 h-6"></i> 
+                            AI Citation Intelligence
+                        </div>
+                        <h3 class="text-3xl md:text-4xl font-bold mb-4">Visibility Inside AI Answers</h3>
+                        <p class="text-slate-400 mb-6 leading-relaxed">
+                            Powered by <strong class="text-white">Perplexity AI</strong>. Track your brand mentions, cited URLs, and share of voice inside AI-generated responses. As search behavior shifts from links to AI-generated answers, MarAI helps brands optimize for AI exposure, not just rankings.
+                        </p>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 text-sm">
+                                <i data-lucide="check-circle" class="text-emerald-500 w-5 h-5"></i>
+                                <span>Brand mentions in AI responses</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-sm">
+                                <i data-lucide="check-circle" class="text-emerald-500 w-5 h-5"></i>
+                                <span>Source URLs cited by AI systems</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-sm">
+                                <i data-lucide="check-circle" class="text-emerald-500 w-5 h-5"></i>
+                                <span>Share of voice vs competitors</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-sm">
+                                <i data-lucide="check-circle" class="text-emerald-500 w-5 h-5"></i>
+                                <span>Visibility score (0-100)</span>
+                            </div>
+                        </div>
+                        <div class="bg-black/40 px-4 py-3 rounded-lg text-xs font-mono text-marai-orange mt-6">
+                            Status: Monitoring 50+ AI Endpoints
+                        </div>
+                    </div>
+
+                    <!-- AI CITATION INTELLIGENCE VISUAL -->
+                    <!-- 
+                    Design intent:
+                    This is a category-defining feature.
+                    The visuals should instantly answer:
+                    'Can I see my brand inside AI answers?'
+                    -->
+                    <div class="citation-visual relative group mt-8">
+                    <button onclick="moveCitationSlider(-1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-black/70 hover:bg-marai-orange p-1.5 rounded-full text-white transition-all opacity-0 group-hover:opacity-100 border border-white/10">
+                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="moveCitationSlider(1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-black/70 hover:bg-marai-orange p-1.5 rounded-full text-white transition-all opacity-0 group-hover:opacity-100 border border-white/10">
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </button>
+
+                    <div class="citation-viewport">
+    <div id="citationSlider">
+        <div class="citation-slide">
+            <div class="image-container" onclick="openLightbox('C:/Users/91733/Desktop/Img/AI Citation Intelligence/Visibility Score.png', 'AI visibility score')">
+                <img src="C:\Users\91733\Desktop\Img\AI Citation Intelligence\Visibility Score.png" alt="AI visibility score" />
+                <div class="image-overlay">
+                    <span class="overlay-text">Click for preview</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="citation-slide">
+            <div class="image-container" onclick="openLightbox('C:/Users/91733/Desktop/Img/AI Citation Intelligence/Citations.png', 'AI citation tracking')">
+                <img src="C:\Users\91733\Desktop\Img\AI Citation Intelligence\Citations.png" alt="AI citation tracking" />
+                <div class="image-overlay">
+                    <span class="overlay-text">Click for preview</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="citation-slide">
+            <div class="image-container" onclick="openLightbox('C:/Users/91733/Desktop/Img/AI Citation Intelligence/Cited URL.png', 'Cited URLs')">
+                <img src="C:\Users\91733\Desktop\Img\AI Citation Intelligence\Cited URL.png" alt="Cited URLs" />
+                <div class="image-overlay">
+                    <span class="overlay-text">Click for preview</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                    <div class="flex justify-center gap-2 mt-4">
+                        <div class="citation-dot active" onclick="jumpToCitation(0)"></div>
+                        <div class="citation-dot" onclick="jumpToCitation(1)"></div>
+                        <div class="citation-dot" onclick="jumpToCitation(2)"></div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Google Data Integration -->
+    <section class="py-32 px-6 bg-white/[0.01]">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16">
+            <div class="reveal">
+                <div class="flex items-center gap-3 mb-6">
+                    <i data-lucide="database" class="text-marai-orange"></i>
+                    <span class="font-bold uppercase tracking-widest text-xs">Real Performance Data</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">AI That Learns From Real Metrics</h2>
+                <p class="text-xl text-slate-400 leading-relaxed mb-8">
+                    MarAI isn't guessing. We integrate directly with <strong class="text-white">Google Search Console</strong> and <strong class="text-white">GA4</strong> to ground AI decisions in behavioral data, actual impressions, and real-time clicks.
+                </p>
+                <p class="text-slate-400 leading-relaxed mb-8">
+                    This transforms MarAI from a content generator into a data-informed decision engine.
+                </p>
+
+                <!-- GOOGLE DATA INTEGRATION PROOF -->
+                <!-- 
+                Design intent:
+                Trust builder.
+                Shows MarAI is connected to real performance data,
+                not guessing or hallucinating strategies.
+                -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="glass p-5 rounded-xl border-l-4 border-l-accent-color">
+                        <i data-lucide="search" class="text-marai-orange mb-2"></i>
+                        <div class="text-sm font-bold">GSC Integration</div>
+                        <div class="text-xs text-slate-500 mt-1">Real search queries & impressions</div>
+                    </div>
+                    <div class="glass p-5 rounded-xl border-l-4 border-l-blue-500">
+                        <i data-lucide="bar-chart-3" class="text-blue-500 mb-2"></i>
+                        <div class="text-sm font-bold">GA4 Logic</div>
+                        <div class="text-xs text-slate-500 mt-1">Behavioral analytics & clicks</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass p-10 rounded-[3rem] reveal border-emerald-500/20">
+                <h3 class="text-2xl font-bold mb-4 flex items-center gap-3">
+                    <i data-lucide="target" class="text-emerald-500"></i> 
+                    What This Enables
+                </h3>
+                <div class="space-y-4">
+                    <div class="bg-white/5 p-5 rounded-xl">
+                        <div class="flex items-start gap-3">
+                            <i data-lucide="trending-up" class="text-emerald-500 mt-1 flex-shrink-0"></i>
+                            <div>
+                                <h4 class="font-semibold mb-1">AI Strategies Informed by Search Queries</h4>
+                                <p class="text-sm text-slate-400">Decisions backed by what people actually search for</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 p-5 rounded-xl">
+                        <div class="flex items-start gap-3">
+                            <i data-lucide="mouse-pointer-click" class="text-blue-500 mt-1 flex-shrink-0"></i>
+                            <div>
+                                <h4 class="font-semibold mb-1">Content Backed by Real Clicks</h4>
+                                <p class="text-sm text-slate-400">Optimize based on what actually converts</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 p-5 rounded-xl">
+                        <div class="flex items-start gap-3">
+                            <i data-lucide="compass" class="text-marai-orange mt-1 flex-shrink-0"></i>
+                            <div>
+                                <h4 class="font-semibold mb-1">Strategies Grounded in Behavior</h4>
+                                <p class="text-sm text-slate-400">No assumptions—just real user data</p>
+                            </div>
+                        </div>
+                    </div>
+<div class="google-data-visual mb-8">
+                    <img
+                        src="C:\Users\91733\Desktop\Img\Google Data + Real Metrics\Search Data.png"
+                        alt="Google Search Console and Analytics data integrated into MarAI"
+                        class="w-full rounded-2xl border border-white/10 shadow-xl"
+                        onclick="openLightbox(this.src, this.alt)"
+                    />
+                </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Asset Library -->
+    <section class="py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-20 reveal">
+                <div class="inline-block px-4 py-1.5 glass rounded-full text-marai-orange text-xs font-bold tracking-widest uppercase mb-6">
+                    Marketing Knowledge Base
+                </div>
+                <h2 class="text-4xl md:text-5xl font-black mb-6">Asset Library & Reuse System</h2>
+                <p class="text-xl text-slate-400 max-w-3xl mx-auto mb-8">
+                    Every output generated in MarAI can be saved, reused, and evolved. Create a marketing knowledge base that grows with usage.
+                </p>
+
+                <!-- ASSET LIBRARY VISUAL -->
+                <!-- 
+                Design intent:
+                Communicates compounding value.
+                This is not storage — it is a reusable marketing knowledge base.
+                -->
+                <div class="asset-library-visual max-w-5xl mx-auto mb-12">
+                    <img
+                        src="C:\Users\91733\Desktop\Img\Asset Library\Saved Assets.png"
+                        alt="Saved assets library in MarAI showing reusable marketing outputs"
+                        class="w-full rounded-3xl border border-white/10 shadow-2xl"
+                        onclick="openLightbox(this.src, this.alt)"
+                    />
+                </div>
+            </div>
+
+            <div class="glass p-12 rounded-[3rem] reveal border-marai-orange/20 mb-12">
+                <h3 class="text-2xl font-bold mb-8 flex items-center gap-3">
+                    <i data-lucide="library" class="text-emerald-500"></i>
+                    10 Reusable Asset Types
+                </h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <div class="bg-white/5 p-4 rounded-xl text-center">
+                        <i data-lucide="user-circle" class="text-marai-orange mx-auto mb-2"></i>
+                        <div class="text-sm font-bold">Personas</div>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl text-center">
+                        <i data-lucide="calendar" class="text-blue-500 mx-auto mb-2"></i>
+                        <div class="text-sm font-bold">Calendars</div>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl text-center">
+                        <i data-lucide="file-text" class="text-emerald-500 mx-auto mb-2"></i>
+                        <div class="text-sm font-bold">Content Pieces</div>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl text-center">
+                        <i data-lucide="search" class="text-orange-500 mx-auto mb-2"></i>
+                        <div class="text-sm font-bold">Keyword Research</div>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl text-center">
+                        <i data-lucide="layers" class="text-pink-500 mx-auto mb-2"></i>
+                        <div class="text-sm font-bold">Gap Analysis</div>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl text-center">
+                        <i data-lucide="target" class="text-cyan-500 mx-auto mb-2"></i>
+                        <div class="text-sm font-bold">SEO Strategies</div>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl text-center">
+                        <i data-lucide="trending-up" class="text-yellow-500 mx-auto mb-2"></i>
+                        <div class="text-sm font-bold">Optimizer Reports</div>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl text-center">
+                        <i data-lucide="radar" class="text-marai-orange mx-auto mb-2"></i>
+                        <div class="text-sm font-bold">Citation Reports</div>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl text-center">
+                        <i data-lucide="share-2" class="text-blue-500 mx-auto mb-2"></i>
+                        <div class="text-sm font-bold">Social Calendars</div>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl text-center">
+                        <i data-lucide="mail" class="text-emerald-500 mx-auto mb-2"></i>
+                        <div class="text-sm font-bold">Email Calendars</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-4xl mx-auto reveal">
+                <h3 class="text-2xl font-bold mb-6 text-center">Why This Is More Than a Library</h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-marai-orange/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="refresh-cw" class="text-marai-orange w-8 h-8"></i>
+                        </div>
+                        <h4 class="font-bold mb-2">Reusable Inputs</h4>
+                        <p class="text-sm text-slate-400">Assets become inputs for future campaigns</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="arrow-up-right" class="text-blue-500 w-8 h-8"></i>
+                        </div>
+                        <h4 class="font-bold mb-2">Campaigns Compound</h4>
+                        <p class="text-sm text-slate-400">Build on previous work instead of restarting</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="brain" class="text-emerald-500 w-8 h-8"></i>
+                        </div>
+                        <h4 class="font-bold mb-2">Growing Knowledge</h4>
+                        <p class="text-sm text-slate-400">Intelligence that improves with every use</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture & Security -->
+    <section id="security" class="py-32 px-6 bg-white/[0.01]">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-20 reveal">
+                <div class="inline-block px-4 py-1.5 glass rounded-full text-marai-orange text-xs font-bold tracking-widest uppercase mb-6">
+                    Production-Grade Infrastructure
+                </div>
+                <h2 class="text-4xl md:text-5xl font-black mb-6">Modern Full-Stack Architecture</h2>
+                <p class="text-xl text-slate-400 max-w-3xl mx-auto">
+                    MarAI is built on a production-grade architecture, not a prototype stack.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 mb-16 reveal">
+                <div class="glass p-8 rounded-3xl">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i data-lucide="code" class="text-marai-orange w-6 h-6"></i>
+                        <h3 class="text-xl font-bold">Frontend</h3>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-400">
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-marai-orange"></i>
+                            React 18 + TypeScript
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-marai-orange"></i>
+                            Vite for fast builds
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-marai-orange"></i>
+                            Custom responsive design
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="glass p-8 rounded-3xl">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i data-lucide="server" class="text-blue-500 w-6 h-6"></i>
+                        <h3 class="text-xl font-bold">Backend</h3>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-400">
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-blue-500"></i>
+                            Node.js + Express
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-blue-500"></i>
+                            PostgreSQL with pooling
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-blue-500"></i>
+                            Token-based auth
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="glass p-8 rounded-3xl">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i data-lucide="cpu" class="text-emerald-500 w-6 h-6"></i>
+                        <h3 class="text-xl font-bold">AI Infrastructure</h3>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-400">
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i>
+                            Google Gemini 2.5 Flash
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i>
+                            Perplexity AI
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i>
+                            Puppeteer & Cheerio
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="glass p-10 rounded-[3rem] reveal border-marai-orange/20 purple-glow">
+                <h3 class="text-2xl font-bold mb-8 flex items-center gap-3">
+                    <i data-lucide="shield-check" class="text-marai-orange"></i>
+                    Enterprise-Grade Security by Design
+                </h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white/5 p-5 rounded-xl">
+                        <i data-lucide="lock" class="text-marai-orange mb-3"></i>
+                        <h4 class="font-bold mb-2 text-sm">Opaque Token Auth</h4>
+                        <p class="text-xs text-slate-500">Secure authentication with instant revocation</p>
+                    </div>
+                    <div class="bg-white/5 p-5 rounded-xl">
+                        <i data-lucide="shield" class="text-blue-500 mb-3"></i>
+                        <h4 class="font-bold mb-2 text-sm">Email Verification</h4>
+                        <p class="text-xs text-slate-500">Secure password resets and account protection</p>
+                    </div>
+                    <div class="bg-white/5 p-5 rounded-xl">
+                        <i data-lucide="activity" class="text-emerald-500 mb-3"></i>
+                        <h4 class="font-bold mb-2 text-sm">Rate Limiting</h4>
+                        <p class="text-xs text-slate-500">Input sanitization and abuse prevention</p>
+                    </div>
+                    <div class="bg-white/5 p-5 rounded-xl">
+                        <i data-lucide="layers" class="text-orange-500 mb-3"></i>
+                        <h4 class="font-bold mb-2 text-sm">Client-Level Isolation</h4>
+                        <p class="text-xs text-slate-500">Complete data separation by client</p>
+                    </div>
+                    <div class="bg-white/5 p-5 rounded-xl">
+                        <i data-lucide="file-check" class="text-pink-500 mb-3"></i>
+                        <h4 class="font-bold mb-2 text-sm">GDPR Ready</h4>
+                        <p class="text-xs text-slate-500">Compliant architecture with audit logging</p>
+                    </div>
+                    <div class="bg-white/5 p-5 rounded-xl">
+                        <i data-lucide="users" class="text-cyan-500 mb-3"></i>
+                        <h4 class="font-bold mb-2 text-sm">Multi-Session Support</h4>
+                        <p class="text-xs text-slate-500">Scale across teams and campaigns</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Who It's For -->
+    <section class="py-32 px-6">
+        <div class="max-w-5xl mx-auto text-center reveal">
+            <div class="inline-block px-4 py-1.5 glass rounded-full text-marai-orange text-xs font-bold tracking-widest uppercase mb-6">
+                Built for Real Complexity
+            </div>
+            <h2 class="text-4xl md:text-5xl font-black mb-6">Who MarAI Is For</h2>
+            <p class="text-xl text-slate-400 mb-16 max-w-3xl mx-auto">
+                MarAI is built for teams managing real complexity, not casual experimentation.
+            </p>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="glass p-8 rounded-3xl text-left bento-card">
+                    <i data-lucide="building-2" class="text-marai-orange mb-4 w-8 h-8"></i>
+                    <h3 class="text-lg font-bold mb-2">Marketing Agencies</h3>
+                    <p class="text-sm text-slate-400">Managing multiple clients with confidence</p>
+                </div>
+                <div class="glass p-8 rounded-3xl text-left bento-card">
+                    <i data-lucide="users" class="text-blue-500 mb-4 w-8 h-8"></i>
+                    <h3 class="text-lg font-bold mb-2">In-House Teams</h3>
+                    <p class="text-sm text-slate-400">Scaling marketing operations efficiently</p>
+                </div>
+                <div class="glass p-8 rounded-3xl text-left bento-card">
+                    <i data-lucide="briefcase" class="text-emerald-500 mb-4 w-8 h-8"></i>
+                    <h3 class="text-lg font-bold mb-2">SEO Consultants</h3>
+                    <p class="text-sm text-slate-400">Data-driven content strategies</p>
+                </div>
+                <div class="glass p-8 rounded-3xl text-left bento-card">
+                    <i data-lucide="trending-up" class="text-orange-500 mb-4 w-8 h-8"></i>
+                    <h3 class="text-lg font-bold mb-2">SaaS Growth Teams</h3>
+                    <p class="text-sm text-slate-400">Content-driven customer acquisition</p>
+                </div>
+                <div class="glass p-8 rounded-3xl text-left bento-card">
+                    <i data-lucide="shopping-cart" class="text-pink-500 mb-4 w-8 h-8"></i>
+                    <h3 class="text-lg font-bold mb-2">E-Commerce Teams</h3>
+                    <p class="text-sm text-slate-400">Product content at scale</p>
+                </div>
+                <div class="glass p-8 rounded-3xl text-left bento-card">
+                    <i data-lucide="sparkles" class="text-cyan-500 mb-4 w-8 h-8"></i>
+                    <h3 class="text-lg font-bold mb-2">AI-Forward Orgs</h3>
+                    <p class="text-sm text-slate-400">Leading-edge marketing teams</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Vision -->
+    <section class="py-32 px-6 bg-white/[0.01] text-center reveal">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold mb-10 italic">"The Discovery Era"</h2>
+            <p class="text-xl md:text-2xl text-slate-400 leading-relaxed mb-12">
+                Marketing is no longer just about ranking pages. Discovery now happens inside AI systems. MarAI is the category-defining operating system built for this new era of search and content.
+            </p>
+            <div class="grid md:grid-cols-3 gap-8 max-w-3xl mx-auto">
+                <div>
+                    <div class="text-marai-orange font-bold mb-2">AI is a Collaborator</div>
+                    <p class="text-sm text-slate-500">Not just a generator</p>
+                </div>
+                <div>
+                    <div class="text-marai-orange font-bold mb-2">Marketing is Iterative</div>
+                    <p class="text-sm text-slate-500">Not one-shot outputs</p>
+                </div>
+                <div>
+                    <div class="text-marai-orange font-bold mb-2">Visibility in Answers</div>
+                    <p class="text-sm text-slate-500">Not just in links</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Future Enhancements -->
+    <section class="py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-20 reveal">
+                <div class="inline-block px-4 py-1.5 glass rounded-full text-marai-orange text-xs font-bold tracking-widest uppercase mb-6">
+                    Roadmap & Vision
+                </div>
+                <h2 class="text-4xl md:text-5xl font-black mb-6">Future Enhancements & Planned Additions</h2>
+                <p class="text-xl text-slate-400 max-w-3xl mx-auto">
+                    MarAI is built on a modular, AI-first architecture that allows new capabilities to be added without disrupting existing workflows. Future enhancements are focused on expanding MarAI's role from execution support to full-funnel marketing intelligence and delivery.
+                </p>
+            </div>
+
+            <div class="space-y-8 reveal">
+                <!-- Ads Analysis & Strategy -->
+                <div class="glass p-10 rounded-[3rem] border-marai-orange/20 hover:border-marai-orange/40 transition">
+                    <div class="flex items-start gap-6">
+                        <div class="w-16 h-16 bg-marai-orange/20 rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="target" class="text-marai-orange w-8 h-8"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-4">
+                                <h3 class="text-2xl font-bold">Ads Analysis & Strategy</h3>
+                                <span class="px-3 py-1 bg-marai-orange/20 text-marai-orange text-xs font-bold rounded-full">PLANNED</span>
+                            </div>
+                            <p class="text-slate-400 mb-6">
+                                MarAI is designed to expand into paid media intelligence, enabling teams to analyze, optimize, and plan advertising campaigns using AI.
+                            </p>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="check-circle" class="text-success-color mt-0.5 flex-shrink-0"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-sm mb-1">AI-Powered Ad Performance Analysis</h4>
+                                        <p class="text-xs text-slate-500">Deep insights into campaign effectiveness</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="check-circle" class="text-success-color mt-0.5 flex-shrink-0"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-sm mb-1">Multi-Platform Strategy Recommendations</h4>
+                                        <p class="text-xs text-slate-500">Unified approach across ad platforms</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="check-circle" class="text-success-color mt-0.5 flex-shrink-0"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-sm mb-1">Budget Allocation & Optimization</h4>
+                                        <p class="text-xs text-slate-500">AI-driven spend recommendations</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="check-circle" class="text-success-color mt-0.5 flex-shrink-0"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-sm mb-1">Competitor Ad Intelligence</h4>
+                                        <p class="text-xs text-slate-500">Positioning analysis and insights</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="check-circle" class="text-success-color mt-0.5 flex-shrink-0"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-sm mb-1">A/B Testing Recommendations</h4>
+                                        <p class="text-xs text-slate-500">Pattern-driven test strategies</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 p-4 bg-white/5 rounded-xl border-l-4 border-marai-orange">
+                                <p class="text-sm text-slate-400">
+                                    <strong class="text-white">Impact:</strong> This allows MarAI to unify organic and paid strategy under one platform.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Generator -->
+                <div class="glass p-10 rounded-[3rem] border-blue-500/20 hover:border-blue-500/40 transition">
+                    <div class="flex items-start gap-6">
+                        <div class="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="mail" class="text-blue-500 w-8 h-8"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-4">
+                                <h3 class="text-2xl font-bold">Email Generator (HTML + CSS Output)</h3>
+                                <span class="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full">PLANNED</span>
+                            </div>
+                            <p class="text-slate-400 mb-6">
+                                MarAI's email capabilities are planned to evolve into a full professional email generation system, supporting production-ready outputs.
+                            </p>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="check-circle" class="text-success-color mt-0.5 flex-shrink-0"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-sm mb-1">Prompt-Driven Email Generation</h4>
+                                        <p class="text-xs text-slate-500">Structured layouts from natural language</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="check-circle" class="text-success-color mt-0.5 flex-shrink-0"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-sm mb-1">Clean, Responsive HTML + CSS</h4>
+                                        <p class="text-xs text-slate-500">Production-ready code output</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="check-circle" class="text-success-color mt-0.5 flex-shrink-0"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-sm mb-1">Brand-Consistent Styling</h4>
+                                        <p class="text-xs text-slate-500">Based on client context and guidelines</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="check-circle" class="text-success-color mt-0.5 flex-shrink-0"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-sm mb-1">One-Click Export</h4>
+                                        <p class="text-xs text-slate-500">Immediate deployment ready</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 p-4 bg-white/5 rounded-xl border-l-4 border-blue-500">
+                                <p class="text-sm text-slate-400">
+                                    <strong class="text-white">Impact:</strong> This removes dependency on designers or external email builders.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Landing Page Builder -->
+                <div class="glass p-10 rounded-[3rem] border-emerald-500/20 hover:border-emerald-500/40 transition">
+                    <div class="flex items-start gap-6">
+                        <div class="w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="layout" class="text-emerald-500 w-8 h-8"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-4">
+                                <h3 class="text-2xl font-bold">Landing Page Builder</h3>
+                                <span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-bold rounded-full">PLANNED</span>
+                            </div>
+                            <p class="text-slate-400 mb-6">
+                                MarAI is planned to extend content generation into full landing page creation, bridging strategy, copy, and layout.
+                            </p>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="check-circle" class="text-success-color mt-0.5 flex-shrink-0"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-sm mb-1">AI-Powered Prompt-to-Page</h4>
+                                        <p class="text-xs text-slate-500">Complete page generation from prompts</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="check-circle" class="text-success-color mt-0.5 flex-shrink-0"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-sm mb-1">CRO-Optimized Layouts</h4>
+                                        <p class="text-xs text-slate-500">Conversion-focused design recommendations</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="check-circle" class="text-success-color mt-0.5 flex-shrink-0"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-sm mb-1">Responsive, Production-Ready</h4>
+                                        <p class="text-xs text-slate-500">Mobile-first designs that work everywhere</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="check-circle" class="text-success-color mt-0.5 flex-shrink-0"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-sm mb-1">Multiple Export Formats</h4>
+                                        <p class="text-xs text-slate-500">HTML, React, Vue compatibility</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="check-circle" class="text-success-color mt-0.5 flex-shrink-0"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-sm mb-1">Brand-Consistent Components</h4>
+                                        <p class="text-xs text-slate-500">Derived from client data automatically</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 p-4 bg-white/5 rounded-xl border-l-4 border-emerald-500">
+                                <p class="text-sm text-slate-400">
+                                    <strong class="text-white">Impact:</strong> This positions MarAI as a true campaign execution platform, not just a content tool.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-16 text-center reveal">
+                <div class="inline-block glass p-6 rounded-2xl border border-marai-orange/30">
+                    <p class="text-slate-400 text-sm">
+                        <strong class="text-white">Designed for Continuous Expansion</strong> — New capabilities added without disrupting existing workflows
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="py-40 px-6 text-center reveal">
+        <div class="max-w-3xl mx-auto glass p-16 rounded-[4rem] accent-glow border border-marai-orange/20">
+            <h2 class="text-4xl md:text-5xl font-black mb-6">More Than an AI Writer.</h2>
+            <p class="text-slate-400 text-lg md:text-xl mb-12">
+                MarAI is a marketing operating system built for the next era of search, content, and AI-driven discovery.
+            </p>
+            <div class="flex justify-center">
+                <button onclick="openModal()" class="px-10 py-5 bg-marai-orange hover:bg-marai-orange-hover font-black rounded-2xl text-white accent-glow-btn">Request Demo</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-white/5 text-center text-slate-600 text-xs">
+        <p class="mb-4">© 2026 MarAI Marketing Technologies Inc. Built for Multi-Agent Workflows.</p>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Modal Functions
+        function openModal() {
+            document.getElementById('demoModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('demoModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal on overlay click
+        document.getElementById('demoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeLightbox();
+            }
+        });
+
+        // Handle Form Submission
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                message: document.getElementById('message').value
+            };
+
+            console.log('Demo Request Submitted:', formData);
+            
+            // Show success message
+            alert('Thank you for your interest! We\'ll get back to you shortly.');
+            
+            // Reset form and close modal
+            document.getElementById('demoForm').reset();
+            closeModal();
+            
+            // Here you would typically send the data to your backend
+            // fetch('/api/demo-request', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify(formData)
+            // });
+        }
+
+        // Image Lightbox Functions
+        let currentImageIndex = 0;
+        let allImages = [];
+
+        function openLightbox(src, alt) {
+            const lightbox = document.getElementById('imageLightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+            
+            // Get all clickable images on the page
+            allImages = Array.from(document.querySelectorAll('img[onclick*="openLightbox"]'));
+            currentImageIndex = allImages.findIndex(img => img.src === src);
+            
+            lightboxImage.src = src;
+            lightboxImage.alt = alt;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Show/hide navigation buttons
+            updateNavigationButtons();
+            
+            // Re-initialize Lucide icons for the navigation buttons
+            setTimeout(() => lucide.createIcons(), 100);
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('imageLightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function navigateLightbox(direction) {
+            currentImageIndex += direction;
+            
+            // Wrap around
+            if (currentImageIndex < 0) {
+                currentImageIndex = allImages.length - 1;
+            } else if (currentImageIndex >= allImages.length) {
+                currentImageIndex = 0;
+            }
+            
+            const nextImage = allImages[currentImageIndex];
+            const lightboxImage = document.getElementById('lightboxImage');
+            lightboxImage.src = nextImage.src;
+            lightboxImage.alt = nextImage.alt;
+            
+            updateNavigationButtons();
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.querySelector('.lightbox-prev');
+            const nextBtn = document.querySelector('.lightbox-next');
+            
+            // Show navigation buttons only if there are multiple images
+            if (allImages.length > 1) {
+                prevBtn.style.display = 'flex';
+                nextBtn.style.display = 'flex';
+            } else {
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+            }
+        }
+
+        // Close lightbox on overlay click
+        document.getElementById('imageLightbox').addEventListener('click', function(e) {
+            if (e.target === this || e.target.classList.contains('lightbox-content')) {
+                closeLightbox();
+            }
+        });
+
+        // Keyboard navigation for lightbox
+        document.addEventListener('keydown', function(e) {
+            const lightbox = document.getElementById('imageLightbox');
+            if (lightbox.classList.contains('active')) {
+                if (e.key === 'ArrowLeft') {
+                    navigateLightbox(-1);
+                } else if (e.key === 'ArrowRight') {
+                    navigateLightbox(1);
+                }
+            }
+        });
+
+        // Scroll Reveal
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Parallax Mesh Background
+        window.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 20;
+            const y = (e.clientY / window.innerHeight - 0.5) * 20;
+            document.querySelector('.mesh-bg').style.transform = `translate(${x}px, ${y}px)`;
+        });
+// --- Workflow Slider Logic ---
+        let currentWorkflowSlide = 0;
+        const workflowSlider = document.getElementById('workflowSlider');
+        const workflowDots = document.querySelectorAll('.slider-dot');
+        const totalWorkflowSlides = 3;
+        let workflowAutoTimer;
+
+        function updateWorkflowSlider() {
+            if(!workflowSlider) return;
+            workflowSlider.style.transform = `translateX(-${currentWorkflowSlide * 100}%)`;
+            workflowDots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentWorkflowSlide);
+            });
+        }
+
+        function moveWorkflowSlider(direction) {
+            currentWorkflowSlide = (currentWorkflowSlide + direction + totalWorkflowSlides) % totalWorkflowSlides;
+            updateWorkflowSlider();
+            startWorkflowTimer(); // Reset timer on manual click
+        }
+
+        function jumpToSlide(index) {
+            currentWorkflowSlide = index;
+            updateWorkflowSlider();
+            startWorkflowTimer();
+        }
+
+        function startWorkflowTimer() {
+            clearInterval(workflowAutoTimer);
+            workflowAutoTimer = setInterval(() => {
+                moveWorkflowSlider(1);
+            }, 5000); 
+        }
+
+        // Initialize Slider
+        startWorkflowTimer();
+
+        // Refresh icons for the new buttons
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+
+// --- Citation Slider Logic ---
+        let currentCitationSlide = 0;
+        const citationSlider = document.getElementById('citationSlider');
+        const citationDots = document.querySelectorAll('.citation-dot');
+        const totalCitationSlides = 3;
+        let citationAutoTimer;
+
+        function updateCitationSlider() {
+            if(!citationSlider) return;
+            citationSlider.style.transform = `translateX(-${currentCitationSlide * 100}%)`;
+            citationDots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentCitationSlide);
+            });
+        }
+
+        function moveCitationSlider(direction) {
+            currentCitationSlide = (currentCitationSlide + direction + totalCitationSlides) % totalCitationSlides;
+            updateCitationSlider();
+            startCitationTimer();
+        }
+
+        function jumpToCitation(index) {
+            currentCitationSlide = index;
+            updateCitationSlider();
+            startCitationTimer();
+        }
+
+        function startCitationTimer() {
+            clearInterval(citationAutoTimer);
+            citationAutoTimer = setInterval(() => {
+                moveCitationSlider(1);
+            }, 5000); 
+        }
+
+        // Initialize Citation Slider
+        startCitationTimer();
+    </script>
+</body>
+</html>

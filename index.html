@@ -1987,9 +1987,12 @@
 
         // Handle Form Submission
 function handleFormSubmit(event) {
-  alert("Thank you for your interest! We'll get back to you shortly.");
-  document.getElementById("demoForm").reset();
-  closeModal();
+  // Let the browser submit the form first
+  setTimeout(() => {
+    alert("Thank you for your interest! We'll get back to you shortly.");
+    document.getElementById("demoForm").reset();
+    closeModal();
+  }, 300);
 }
         // Image Lightbox Functions
         let currentImageIndex = 0;

@@ -607,7 +607,6 @@
   id="demoForm"
   action="https://script.google.com/macros/s/AKfycbyzcIShZwFu7fSTu5FdDzJcP-vTZzEIVVlb4PKS1qGILhnLmYWzcmVDy2K-SCaLDpk/exec"
   method="POST"
-  target="hidden_iframe"
   onsubmit="handleFormSubmit(event)"
 >
                     <div class="form-group">
@@ -633,7 +632,6 @@
             </div>
         </div>
     </div>
-<iframe name="hidden_iframe" style="display:none;"></iframe>
     <!-- Image Lightbox Modal -->
     <div class="image-lightbox" id="imageLightbox">
         <div class="lightbox-content">
@@ -1987,12 +1985,14 @@
 
         // Handle Form Submission
 function handleFormSubmit(event) {
-  // DO NOT prevent default — we WANT the form to submit
-  setTimeout(() => {
-    alert("Thank you for your interest! We'll get back to you shortly.");
-    document.getElementById("demoForm").reset();
-    closeModal();
-  }, 500);
+  event.preventDefault();
+
+  const form = document.getElementById("demoForm");
+  form.submit(); // native submit
+
+  alert("Thank you for your interest! We'll get back to you shortly.");
+  form.reset();
+  closeModal();
 }
         // Image Lightbox Functions
         let currentImageIndex = 0;

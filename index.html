@@ -603,7 +603,13 @@
                 <p class="text-slate-400 text-sm pb-4">Let's discuss how MarAI can transform your marketing operations.</p>
             </div>
             <div class="modal-body">
-                <form id="demoForm" onsubmit="handleFormSubmit(event)">
+                <form
+  id="demoForm"
+  action="https://script.google.com/macros/s/AKfycbwjcJuJ_0xTJBX3taIG_FClbwWvTDNEpUTHQoQUJMHLrErGJyHg89uy71MyuHEF3rOlag/exec"
+  method="POST"
+  target="hidden_iframe"
+  onsubmit="handleFormSubmit()"
+>
                     <div class="form-group">
                         <label class="form-label" for="name">Name *</label>
                         <input type="text" id="name" name="name" class="form-input" placeholder="Your full name" required>
@@ -627,7 +633,7 @@
             </div>
         </div>
     </div>
-
+<iframe name="hidden_iframe" style="display:none;"></iframe>
     <!-- Image Lightbox Modal -->
     <div class="image-lightbox" id="imageLightbox">
         <div class="lightbox-content">
@@ -1981,23 +1987,9 @@
 
         // Handle Form Submission
 function handleFormSubmit(event) {
-    event.preventDefault();
-
-    const form = document.getElementById("demoForm");
-
-    fetch("https://script.google.com/macros/s/AKfycbwjcJuJ_0xTJBX3taIG_FClbwWvTDNEpUTHQoQUJMHLrErGJyHg89uy71MyuHEF3rOlag/exec", {
-        method: "POST",
-        body: new FormData(form)
-    })
-    .then(() => {
-        alert("Thank you for your interest! We'll get back to you shortly.");
-        form.reset();
-        closeModal();
-    })
-    .catch(error => {
-        console.error("Form submission error:", error);
-        alert("Something went wrong. Please try again.");
-    });
+    alert("Thank you for your interest! We'll get back to you shortly.");
+    document.getElementById('demoForm').reset();
+    closeModal();
 }
         // Image Lightbox Functions
         let currentImageIndex = 0;

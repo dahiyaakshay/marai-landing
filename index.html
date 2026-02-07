@@ -605,10 +605,10 @@
             <div class="modal-body">
                 <form
   id="demoForm"
-  action="https://script.google.com/macros/s/AKfycbwjcJuJ_0xTJBX3taIG_FClbwWvTDNEpUTHQoQUJMHLrErGJyHg89uy71MyuHEF3rOlag/exec"
+  action="https://script.google.com/macros/s/AKfycbyzcIShZwFu7fSTu5FdDzJcP-vTZzEIVVlb4PKS1qGILhnLmYWzcmVDy2K-SCaLDpk/exec"
   method="POST"
   target="hidden_iframe"
-  onsubmit="handleFormSubmit()"
+  onsubmit="handleFormSubmit(event)"
 >
                     <div class="form-group">
                         <label class="form-label" for="name">Name *</label>
@@ -1986,10 +1986,14 @@
         });
 
         // Handle Form Submission
+<script>
 function handleFormSubmit(event) {
+  // DO NOT prevent default — we WANT the form to submit
+  setTimeout(() => {
     alert("Thank you for your interest! We'll get back to you shortly.");
-    document.getElementById('demoForm').reset();
+    document.getElementById("demoForm").reset();
     closeModal();
+  }, 500);
 }
         // Image Lightbox Functions
         let currentImageIndex = 0;

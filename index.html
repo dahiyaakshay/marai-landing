@@ -1991,24 +1991,20 @@ function handleFormSubmit(event) {
     };
 
     fetch("https://script.google.com/macros/s/AKfycbwjcJuJ_0xTJBX3taIG_FClbwWvTDNEpUTHQoQUJMHLrErGJyHg89uy71MyuHEF3rOlag/exec", {
-        method: "POST",
-        body: JSON.stringify(formData),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
-    .then(response => response.json())
-    .then(() => {
-        alert("Thank you for your interest! We'll get back to you shortly.");
-        document.getElementById('demoForm').reset();
-        closeModal();
-    })
-    .catch(error => {
-        console.error("Form submission error:", error);
-        alert("Something went wrong. Please try again.");
-    });
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify(formData)
+})
+.then(() => {
+    alert("Thank you for your interest! We'll get back to you shortly.");
+    document.getElementById('demoForm').reset();
+    closeModal();
+})
+.catch(error => {
+    console.error("Form submission error:", error);
+    alert("Something went wrong. Please try again.");
+});
 }
-
         // Image Lightbox Functions
         let currentImageIndex = 0;
         let allImages = [];

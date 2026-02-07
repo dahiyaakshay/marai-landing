@@ -1980,32 +1980,34 @@
         });
 
         // Handle Form Submission
-        function handleFormSubmit(event) {
-            event.preventDefault();
-            
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                message: document.getElementById('message').value
-            };
+function handleFormSubmit(event) {
+    event.preventDefault();
+    
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        message: document.getElementById('message').value
+    };
 
-            console.log('Demo Request Submitted:', formData);
-            
-            // Show success message
-            alert('Thank you for your interest! We\'ll get back to you shortly.');
-            
-            // Reset form and close modal
-            document.getElementById('demoForm').reset();
-            closeModal();
-            
-            // Here you would typically send the data to your backend
-            // fetch('/api/demo-request', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify(formData)
-            // });
+    fetch("https://script.google.com/macros/s/AKfycbwjcJuJ_0xTJBX3taIG_FClbwWvTDNEpUTHQoQUJMHLrErGJyHg89uy71MyuHEF3rOlag/exec", {
+        method: "POST",
+        body: JSON.stringify(formData),
+        headers: {
+            "Content-Type": "application/json"
         }
+    })
+    .then(response => response.json())
+    .then(() => {
+        alert("Thank you for your interest! We'll get back to you shortly.");
+        document.getElementById('demoForm').reset();
+        closeModal();
+    })
+    .catch(error => {
+        console.error("Form submission error:", error);
+        alert("Something went wrong. Please try again.");
+    });
+}
 
         // Image Lightbox Functions
         let currentImageIndex = 0;

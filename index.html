@@ -607,8 +607,10 @@
   id="demoForm"
   action="https://script.google.com/macros/s/AKfycbyzcIShZwFu7fSTu5FdDzJcP-vTZzEIVVlb4PKS1qGILhnLmYWzcmVDy2K-SCaLDpk/exec"
   method="POST"
+  target="hidden_iframe"
   onsubmit="handleFormSubmit(event)"
 >
+                    <iframe name="hidden_iframe" style="display:none;"></iframe>
                     <div class="form-group">
                         <label class="form-label" for="name">Name *</label>
                         <input type="text" id="name" name="name" class="form-input" placeholder="Your full name" required>
@@ -1985,13 +1987,8 @@
 
         // Handle Form Submission
 function handleFormSubmit(event) {
-  event.preventDefault();
-
-  const form = document.getElementById("demoForm");
-  form.submit(); // native submit
-
   alert("Thank you for your interest! We'll get back to you shortly.");
-  form.reset();
+  document.getElementById("demoForm").reset();
   closeModal();
 }
         // Image Lightbox Functions

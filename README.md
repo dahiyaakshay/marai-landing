@@ -4,7 +4,7 @@ MarAI is a full-stack AI-powered marketing platform designed for real-world, mul
 
 Built with modern web technologies and direct LLM integrations, MarAI unifies content generation, SEO optimization, brand visibility tracking, and campaign management into a single, scalable system.
 
-This is not a single-purpose AI tool.
+This is not a single purpose AI tool.
 
 It is a unified AI-native MarTech platform.
 
@@ -19,7 +19,7 @@ MarAI streamlines marketing workflows by integrating:
 - SEO & GEO content optimization
 - AI brand citation tracking
 - Campaign calendar planning
-- Export-ready asset management
+- Export ready asset management
 - Business intelligence dashboards
 
 The platform reduces execution time across marketing workflows by up to 80% while preserving brand context and quality.
@@ -42,7 +42,7 @@ MarAI integrates two AI systems with distinct responsibilities:
 - Share-of-voice analysis vs competitors
 - Citation extraction & reporting
 
-This dual-AI strategy separates content creation from intelligence tracking — eliminating single-model dependency.
+This dual-AI strategy separates content creation from intelligence tracking eliminating single model dependency.
 
 ---
 
@@ -109,7 +109,7 @@ Why?
 
 - Instant token revocation
 - No sensitive payload inside tokens
-- Database-validated sessions
+- Database validated sessions
 - Multi-session support (up to 10 per user)
 
 Security includes:
@@ -122,7 +122,7 @@ Security includes:
 - Secure API key storage
 - User data isolation per client
 
-Designed for enterprise-grade marketing environments.
+Designed for enterprise grade marketing environments.
 
 ---
 
@@ -147,16 +147,16 @@ No server roundtrip required.
 
 ---
 
-## 📊 Client-Scoped Intelligence
+## 📊 Client Scoped Intelligence
 
 MarAI supports structured multi-client management:
 
 - Client profiles (industry, goals, brand guidelines)
 - Context-aware AI outputs
-- Client-scoped content storage
+- Client scoped content storage
 - Timestamped content history
 - Business intelligence dashboard
-- Cross-client analytics
+- Cross client analytics
 
 Each output is linked via `client_id` for full separation.
 
@@ -172,7 +172,7 @@ Each output is linked via `client_id` for full separation.
 - Export service (~1,700+ lines)
 - Modular route structure (8 route files)
 
-This is production-grade marketing infrastructure.
+This is production grade marketing infrastructure.
 
 ---
 
